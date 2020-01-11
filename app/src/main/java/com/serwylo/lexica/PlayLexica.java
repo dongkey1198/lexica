@@ -67,7 +67,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		} catch (Exception e) {
 			Log.e(TAG,"top level",e);
 		}
-    }
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,15 +80,21 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.rotate:
-				game.rotateBoard();	
-			break;
+				game.rotateBoard();
+				break;
 			case R.id.save_game:
 				synch.abort();
 				saveGame();
 				finish();
-			break;
+				break;
 			case R.id.end_game:
 				game.endNow();
+				break;
+
+			case R.id.restart_game:
+				startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+				finish();
+				break;
 		}
 		return true;
 	}
@@ -112,8 +118,8 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		synch.setFinalizer(this);
 
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-			ViewGroup.LayoutParams.FILL_PARENT,
-			ViewGroup.LayoutParams.FILL_PARENT);
+				ViewGroup.LayoutParams.FILL_PARENT,
+				ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);
@@ -142,8 +148,8 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		synch.setFinalizer(this);
 
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-			ViewGroup.LayoutParams.FILL_PARENT,
-			ViewGroup.LayoutParams.FILL_PARENT);
+				ViewGroup.LayoutParams.FILL_PARENT,
+				ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);
@@ -179,14 +185,14 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 			case GAME_STARTING:
 				game.start();
 				synch.start();
-			break;
+				break;
 			case GAME_PAUSED:
 				game.unpause();
 				synch.start();
-			break;
+				break;
 			case GAME_FINISHED:
 				score();
-			break;
+				break;
 		}
 	}
 

@@ -9,6 +9,11 @@
 		android:title="@string/menu_save_game"
 		android:icon="@drawable/ic_save_white_24dp"
 		app:showAsAction="ifRoom"/>
+
+	<item android:id="@+id/restart_game"
+		android:title="@string/menu_restart_game"/>
+
 	<item android:id="@+id/end_game"
 		android:title="@string/menu_end_game" />
+
 </menu>
