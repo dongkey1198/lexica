@@ -17,8 +17,10 @@
 
 package com.serwylo.lexica;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -67,7 +69,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		} catch (Exception e) {
 			Log.e(TAG,"top level",e);
 		}
-	}
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,20 +83,32 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		switch(item.getItemId()) {
 			case R.id.rotate:
 				game.rotateBoard();
-				break;
+			break;
 			case R.id.save_game:
 				synch.abort();
 				saveGame();
 				finish();
-				break;
+			break;
 			case R.id.end_game:
 				game.endNow();
 				break;
-
+				// DHK ===============================================================================================
 			case R.id.restart_game:
-				startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
-				finish();
-				break;
+				DialogInterface.OnClickListener dialogClickLister = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						switch (i) {
+							case DialogInterface.BUTTON_POSITIVE:
+								startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+								finish();
+								break;
+						}
+					}
+				};
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(R.string.game_restart_dialog).setPositiveButton("Yes", dialogClickLister)
+						.setNegativeButton("No", dialogClickLister).show();
+
 		}
 		return true;
 	}
@@ -118,8 +132,8 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		synch.setFinalizer(this);
 
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.FILL_PARENT,
-				ViewGroup.LayoutParams.FILL_PARENT);
+			ViewGroup.LayoutParams.FILL_PARENT,
+			ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);
@@ -148,8 +162,8 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		synch.setFinalizer(this);
 
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.FILL_PARENT,
-				ViewGroup.LayoutParams.FILL_PARENT);
+			ViewGroup.LayoutParams.FILL_PARENT,
+			ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);
@@ -185,14 +199,14 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 			case GAME_STARTING:
 				game.start();
 				synch.start();
-				break;
+			break;
 			case GAME_PAUSED:
 				game.unpause();
 				synch.start();
-				break;
+			break;
 			case GAME_FINISHED:
 				score();
-				break;
+			break;
 		}
 	}
 
