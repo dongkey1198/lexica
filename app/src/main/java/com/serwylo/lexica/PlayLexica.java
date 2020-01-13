@@ -65,6 +65,9 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 				case "com.serwylo.lexica.action.NEW_GAME":
 					newGame();
 					break;
+				case "com.serwylo.lexica.action.NEW_UNLIMITED_GAME":
+					newGame();
+					break;
 			}
 		} catch (Exception e) {
 			Log.e(TAG,"top level",e);
@@ -119,7 +122,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 	}
 
 	private void newGame() {
-		game = new Game(this);
+		game = new Game(this, false);
 
 		LexicaView lv = new LexicaView(this,game);
 
@@ -134,6 +137,27 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 			ViewGroup.LayoutParams.FILL_PARENT,
 			ViewGroup.LayoutParams.FILL_PARENT);
+		setContentView(lv,lp);
+		lv.setKeepScreenOn(true);
+		lv.setFocusableInTouchMode(true);
+	}
+
+	private void unlimited_Game() {
+		game = new Game(this, true);
+
+		LexicaView lv = new LexicaView(this,game);
+
+		if(synch != null) {
+			synch.abort();
+		}
+		synch = new Synchronizer();
+		synch.setCounter(game);
+		synch.addEvent(lv);
+		synch.setFinalizer(this);
+
+		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+				ViewGroup.LayoutParams.FILL_PARENT,
+				ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);

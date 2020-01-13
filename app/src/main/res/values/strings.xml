@@ -68,6 +68,8 @@
     <!--Dong Hyeon Kim-->
     <string name="menu_restart_game">Restart Game</string>
     <string name="game_restart_dialog">Are You Sure to Play a New Game?</string>
+    <string name="game_mode">Select the Mode</string>
+    <!--Dong Hyeon Kim-->
 
     <string name="button_ok">OK</string>
     <string name="about">About</string>

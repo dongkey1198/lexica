@@ -50,10 +50,25 @@ public class Lexica extends Activity {
 		setContentView(R.layout.splash);
 
 		Button b = (Button) findViewById(R.id.new_game);
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.game_mode)
+				.setItems(R.array.my_string, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						switch (i){
+							case 0:
+								startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+								break;
+							case 1:
+								startActivity(new Intent("com.serwylo.lexica.action.NEW_UNLIMITED_GAME"));
+						}
+					}
+				});
 		// Log.d(TAG,"b="+b);
 		b.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+				builder.show();
 			}
 		});
 

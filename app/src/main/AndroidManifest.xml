@@ -19,6 +19,10 @@
 
         <activity android:name=".PlayLexica">
 			<intent-filter>
+				<action android:name="com.serwylo.lexica.action.NEW_UNLIMITED_GAME" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<intent-filter>
 				<action android:name="com.serwylo.lexica.action.NEW_GAME" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
