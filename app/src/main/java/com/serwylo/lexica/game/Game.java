@@ -222,13 +222,17 @@ public class Game implements Synchronizer.Counter {
 		}
 	}
 
-	public Game (Context c) {
+	public Game (Context c, boolean isinfinite) {
 		status = GameStatus.GAME_STARTING;
 		wordCount = 0;
 		wordList = new LinkedList<>();
 
 		context = c;
 		loadPreferences(c);
+
+		if (isinfinite){
+			maxTimeRemaining = -1;
+		}
 
 		String lettersFileName = language.getLetterDistributionFileName();
 		int id = context.getResources().getIdentifier("raw/" + lettersFileName.substring(0, lettersFileName.lastIndexOf('.')), null, context.getPackageName());
@@ -578,14 +582,25 @@ public class Game implements Synchronizer.Counter {
 	}
 
 	public int tick() {
-		timeRemaining--;
-		if(timeRemaining <= 0) {
-			status = GameStatus.GAME_FINISHED;
-			timeRemaining = 0;
-		} else {
+		if (maxTimeRemaining<0) {
+			// 요건 시간제한 없는 모드에서 플레이시간을 측정해주는 코드임
+			timeRemaining++;
 			Date now = new Date();
-			timeRemaining = Math.max(0,maxTime-
-				(int)(now.getTime()-start.getTime())/10);
+			timeRemaining = (int)(now.getTime()-start.getTime())/10;
+			//현재시가과 게임시작 시간을 빼서 플레이한 시간을 계산하는 식
+		}
+		else
+		{
+			timeRemaining--;
+			if(timeRemaining <= 0) {
+				status = GameStatus.GAME_FINISHED;
+				timeRemaining = 0;
+			} else {
+				Date now = new Date();
+				//Math.max 시간초가 영보다작으면 무시하고 0으로 인식한다.
+				timeRemaining = Math.max(0,maxTime-
+						(int)(now.getTime()-start.getTime())/10);
+			}
 		}
 		return timeRemaining;
 	}
