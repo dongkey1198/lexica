@@ -622,7 +622,10 @@ public class Game implements Synchronizer.Counter {
 
 	public void endNow() {
 		// Log.d(TAG,"endNow");
-		timeRemaining = 0;
+		if(maxTimeRemaining == -1)
+			status = GameStatus.GAME_FINISHED;
+		else
+			timeRemaining = 0;
 	}
 
 	public Map<String, List<Solution>> getSolutions() {

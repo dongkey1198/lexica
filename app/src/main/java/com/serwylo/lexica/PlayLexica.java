@@ -104,7 +104,10 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 					public void onClick(DialogInterface dialogInterface, int i) {
 						switch (i) {
 							case DialogInterface.BUTTON_POSITIVE:
-								startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+								if (game.getMaxTimeRemaining() == -1)
+									startActivity(new Intent("com.serwylo.lexica.action.NEW_UNLIMITED_GAME"));
+								else
+									startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
 								finish();
 								break;
 						}
