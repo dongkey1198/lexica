@@ -93,11 +93,15 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 				finish();
 			break;
 			case R.id.end_game:
+				if(game.getMaxTimeRemaining() == -1) {
+					game.endNow(); //게임설정 끝내고
+					score();// 스코어 페이지로 넘어가게
+				}
+				else
 				game.endNow(); //게임설정 끝내고
-				score();// 스코어 페이지로 넘어가게
-
 				break;
 				// DHK ===============================================================================================
+			
 			case R.id.restart_game:
 				DialogInterface.OnClickListener dialogClickLister = new DialogInterface.OnClickListener() {
 					@Override
