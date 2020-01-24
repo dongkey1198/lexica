@@ -101,7 +101,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 				game.endNow(); //게임설정 끝내고
 				break;
 				// DHK ===============================================================================================
-			
+
 			case R.id.restart_game:
 				DialogInterface.OnClickListener dialogClickLister = new DialogInterface.OnClickListener() {
 					@Override
