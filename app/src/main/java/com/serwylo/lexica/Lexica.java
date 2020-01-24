@@ -109,6 +109,14 @@ public class Lexica extends Activity {
 		int highScore = ScoreActivity.getHighScore(this);
 		TextView tv = (TextView) findViewById(R.id.high_score);
 		tv.setText(getResources().getString(R.string.high_score, highScore));
+
+		b = (Button) findViewById(R.id.history);
+		b.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				startActivity(new
+						Intent("com.serwylo.lexica.action.HISTORY"));
+			}
+		});
 	}
 
 	public void onPause() {
