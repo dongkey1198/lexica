@@ -20,6 +20,7 @@ package com.serwylo.lexica;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -261,6 +262,9 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 
 		Bundle bun = new Bundle();
 		game.save(new GameSaverTransient(bun));
+
+		DatabaseHelper helper = new DatabaseHelper(this);
+		helper.put(game); // 여기서 현제 플레이한 게임 결과를 데이터베이스에 저장한다.
 
 		Intent scoreIntent = new Intent("com.serwylo.lexica.action.SCORE");
 		scoreIntent.putExtras(bun);

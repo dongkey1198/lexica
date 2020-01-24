@@ -68,6 +68,21 @@ public class Game implements Synchronizer.Counter {
 	private boolean showBreakdown;
 	private String hintMode;
 
+	public int getTimeRemaining() {
+		return timeRemaining;
+	}
+
+	public boolean isInfinite(){
+		if (maxTime<0)
+			return true;
+		else
+			return false;
+	}
+
+	public int getBoardSize() {
+		return boardSize;
+	}
+
 	public enum GameStatus { GAME_STARTING, GAME_RUNNING, GAME_PAUSED, GAME_FINISHED }
 
 	private static int[] weights;
@@ -195,7 +210,7 @@ public class Game implements Synchronizer.Counter {
 
 			maxTimeRemaining = saver.readMaxTimeRemaining();
 			timeRemaining = saver.readTimeRemaining();
-			maxTime = timeRemaining;
+			maxTime = getTimeRemaining();
 			start = saver.readStart();
 
 			scoreType = saver.readScoreType();
@@ -239,7 +254,7 @@ public class Game implements Synchronizer.Counter {
 		CharProbGenerator charProbs = new CharProbGenerator(c.getResources().openRawResource(id), getLanguage());
 		Board board;
 
-		switch(boardSize) {
+		switch(getBoardSize()) {
 			case 16:
 				board = charProbs.generateFourByFourBoard();
 				break;
@@ -291,7 +306,7 @@ public class Game implements Synchronizer.Counter {
 		board = b;
 		boardSize = b.getSize();
 
-		switch(boardSize) {
+		switch(getBoardSize()) {
 			case 16:
 				minWordLength = 3;
 			break;
@@ -394,7 +409,7 @@ public class Game implements Synchronizer.Counter {
 	 * For each tile, count how many words that tile can be used for.
 	 */
 	private void initializeWeights() {
-		weights = new int[boardSize];
+		weights = new int[getBoardSize()];
 
 		for (Map.Entry<String, List<Solution>> entry : solutions.entrySet()) {
 			// If we're restoring a game and the word was already used, don't include
@@ -439,7 +454,7 @@ public class Game implements Synchronizer.Counter {
 	public void save(GameSaver saver) {
 		saver.save(
 				board,
-				timeRemaining,
+				getTimeRemaining(),
 				getMaxTimeRemaining(),
 				wordListToString(),
 				scoreType,
@@ -584,15 +599,15 @@ public class Game implements Synchronizer.Counter {
 	public int tick() {
 		if (maxTimeRemaining<0) {
 			// 요건 시간제한 없는 모드에서 플레이시간을 측정해주는 코드임
-			timeRemaining++;
+			timeRemaining = getTimeRemaining() + 1;
 			Date now = new Date();
 			timeRemaining = (int)(now.getTime()-start.getTime())/10;
 			//현재시가과 게임시작 시간을 빼서 플레이한 시간을 계산하는 식
 		}
 		else
 		{
-			timeRemaining--;
-			if(timeRemaining <= 0) {
+			timeRemaining = getTimeRemaining() - 1;
+			if(getTimeRemaining() <= 0) {
 				status = GameStatus.GAME_FINISHED;
 				timeRemaining = 0;
 			} else {
@@ -602,7 +617,7 @@ public class Game implements Synchronizer.Counter {
 						(int)(now.getTime()-start.getTime())/10);
 			}
 		}
-		return timeRemaining;
+		return getTimeRemaining();
 	}
 
 	public GameStatus getStatus() {
@@ -616,7 +631,7 @@ public class Game implements Synchronizer.Counter {
 
 	public void unpause() {
 		status = GameStatus.GAME_RUNNING;
-		maxTime = timeRemaining;
+		maxTime = getTimeRemaining();
 		start = new Date();
 	}
 
