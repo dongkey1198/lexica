@@ -31,9 +31,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @Override
     public void onBindViewHolder(HistoryViewHolder vh, int i) {
         if (i == 0){
-            vh.score.setText("Score");
-            vh.infinite.setText("Game Type");
-            vh.boardType.setText("Board Size");
+            vh.score.setText("Score:");
+            vh.infinite.setText("Game Type:");
+            vh.boardType.setText("Board Size:");
         } else {
             DatabaseHelper.GameResult result = results.get(i - 1);
 

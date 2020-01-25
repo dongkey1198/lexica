@@ -26,6 +26,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -364,9 +365,9 @@ public class ScoreActivity extends TabActivity {
 		}
 	}
 
-	public static int getHighScore(Context c) {
-		SharedPreferences prefs = c.getSharedPreferences(SCORE_PREF_FILE, Context.MODE_PRIVATE);
-		return prefs.getInt(highScoreKey(c), 0);
-	}
+	public static int getHighScore(Context c) { // 이 코드는 보드사이즈에 해당되는 가장 큰점수를 불러오는것이다. 밑에서 2번째꺼
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+		return new DatabaseHelper(c).getHighScore(Integer.parseInt(prefs.getString("boardSize", "16")));
+    }
 }
 

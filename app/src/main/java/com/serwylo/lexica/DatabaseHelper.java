@@ -69,6 +69,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return results;
     }
 
+    public int getHighScore(int board) {
+        int highScore = 0;
+        Cursor query = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME, null); // 데이터베이스에서 존재하는 모든 점수를 불러온다.
+        if (query.moveToFirst()){
+            do {
+                int score = query.getInt(1);//점수랑 보드사이즈를 확인한다.
+                int boardSize = query.getInt(4);// 보드사이즈가 불러온 보드사이즈와 일치하는지 확인
+                if (board == boardSize && highScore < score)// 비교한점수가 현제 보드의 하이스코어보다 높을때 점수변경
+                    highScore = score;
+            } while (query.moveToNext());
+        }
+        return highScore;
+    }
+
     class GameResult {
         private final int score;
         private final int timeRemaining;
