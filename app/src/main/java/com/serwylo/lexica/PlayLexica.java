@@ -17,8 +17,11 @@
 
 package com.serwylo.lexica;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -63,6 +66,9 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 				case "com.serwylo.lexica.action.NEW_GAME":
 					newGame();
 					break;
+				case "com.serwylo.lexica.action.NEW_UNLIMITED_GAME":
+					unlimited_Game();
+					break;
 			}
 		} catch (Exception e) {
 			Log.e(TAG,"top level",e);
@@ -80,7 +86,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.rotate:
-				game.rotateBoard();	
+				game.rotateBoard();
 			break;
 			case R.id.save_game:
 				synch.abort();
@@ -88,7 +94,34 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 				finish();
 			break;
 			case R.id.end_game:
-				game.endNow();
+				if(game.getMaxTimeRemaining() == -1) {
+					game.endNow(); //게임설정 끝내고
+					score();// 스코어 페이지로 넘어가게
+				}
+				else
+				game.endNow(); //게임설정 끝내고
+				break;
+				// DHK ===============================================================================================
+
+			case R.id.restart_game:
+				DialogInterface.OnClickListener dialogClickLister = new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						switch (i) {
+							case DialogInterface.BUTTON_POSITIVE:
+								if (game.getMaxTimeRemaining() == -1)
+									startActivity(new Intent("com.serwylo.lexica.action.NEW_UNLIMITED_GAME"));
+								else
+									startActivity(new Intent("com.serwylo.lexica.action.NEW_GAME"));
+								finish();
+								break;
+						}
+					}
+				};
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(R.string.game_restart_dialog).setPositiveButton("Yes", dialogClickLister)
+						.setNegativeButton("No", dialogClickLister).show();
+
 		}
 		return true;
 	}
@@ -99,7 +132,7 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 	}
 
 	private void newGame() {
-		game = new Game(this);
+		game = new Game(this, false);
 
 		LexicaView lv = new LexicaView(this,game);
 
@@ -114,6 +147,27 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
 			ViewGroup.LayoutParams.FILL_PARENT,
 			ViewGroup.LayoutParams.FILL_PARENT);
+		setContentView(lv,lp);
+		lv.setKeepScreenOn(true);
+		lv.setFocusableInTouchMode(true);
+	}
+
+	private void unlimited_Game() {
+		game = new Game(this, true);
+
+		LexicaView lv = new LexicaView(this,game);
+
+		if(synch != null) {
+			synch.abort();
+		}
+		synch = new Synchronizer();
+		synch.setCounter(game);
+		synch.addEvent(lv);
+		synch.setFinalizer(this);
+
+		ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+				ViewGroup.LayoutParams.FILL_PARENT,
+				ViewGroup.LayoutParams.FILL_PARENT);
 		setContentView(lv,lp);
 		lv.setKeepScreenOn(true);
 		lv.setFocusableInTouchMode(true);
@@ -208,6 +262,9 @@ public class PlayLexica extends AppCompatActivity implements Synchronizer.Finali
 
 		Bundle bun = new Bundle();
 		game.save(new GameSaverTransient(bun));
+
+		DatabaseHelper helper = new DatabaseHelper(this);
+		helper.put(game); // 여기서 현제 플레이한 게임 결과를 데이터베이스에 저장한다.
 
 		Intent scoreIntent = new Intent("com.serwylo.lexica.action.SCORE");
 		scoreIntent.putExtras(bun);

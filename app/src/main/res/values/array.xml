@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="my_string">
+        <item>Normal Mode</item>
+        <item>No Time Limit Mode</item>
+    </string-array>
+</resources>

@@ -23,6 +23,15 @@
 		android:id="@+id/high_score"
 		/>
 
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:textSize="20dp"
+		android:text="View History"
+		android:id="@+id/history"
+		></Button>
+
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="fill_parent"

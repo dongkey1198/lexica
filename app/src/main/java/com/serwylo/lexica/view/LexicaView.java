@@ -205,6 +205,7 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 	}
 
 	private void drawTimer(Canvas canvas) {
+		if (game.getMaxTimeRemaining()<0) return;
 		p.setColor(getResources().getColor(R.color.colorPrimaryDark));
 		canvas.drawRect(0, 0, width, timerHeight + 2, p);
 
@@ -326,7 +327,9 @@ public class LexicaView extends View implements Synchronizer.Event, Game.RotateH
 	}
 
 	private int drawTextTimer(Canvas canvas, int left, int top) {
-		if (timeRemaining < 1000) {
+		if (game.getMaxTimeRemaining()<0){
+			p.setARGB(255, 0, 0, 0);
+		} else if (timeRemaining < 1000) {
 			p.setARGB(255, 255, 0, 0);
 		} else if (timeRemaining < 3000) {
 			p.setARGB(255, 255, 255, 0);
